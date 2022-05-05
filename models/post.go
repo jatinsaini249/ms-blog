@@ -1,13 +1,10 @@
 package models
 
-import (
-	"time"
-)
-
+// Post  => struct
 type Post struct {
-	Id        string    `json:"id,omitempty"`
-	Title     string    `json:"title" validate:"required"`
-	Author    string    `json:"author" validate:"required"`
-	Content   string    `json:"content"  validate:"required"`
-	TimeStamp time.Time `json:"timeStamp"`
+	Id        string `json:"id,omitempty"`
+	Title     string `json:"title" validate:"required"`
+	Author    string `json:"author" validate:"required"`
+	Content   string `json:"content"  validate:"required"`
+	TimeStamp string `json:"timeStamp,omitempty"`
 }
