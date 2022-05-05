@@ -37,7 +37,7 @@ type PostService struct {
 }
 
 // NewPostService => Function to initialize Post service with all its dependencies
-func NewPostService() IPostService {
+func NewPostService() *PostService {
 	return &PostService{
 		Blogs: blogs,
 	}
