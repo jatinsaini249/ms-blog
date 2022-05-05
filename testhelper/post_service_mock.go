@@ -17,7 +17,7 @@ var postTestData = []*models.Post{
 		Title:     "Test Title",
 		Author:    "Test Author",
 		Content:   "Test Content",
-		TimeStamp: time.Now(),
+		TimeStamp: time.Now().Format("2006-01-02"),
 	},
 }
 
@@ -31,7 +31,7 @@ func (postService *PostServiceMock) GetBlogById(id string) (*models.Post, error)
 		Title:     "Test Title",
 		Author:    "Test Author",
 		Content:   "Test Content",
-		TimeStamp: time.Now(),
+		TimeStamp: time.Now().Format("2006-01-02"),
 	}, nil
 }
 
@@ -41,12 +41,12 @@ func (postService *PostServiceMock) FindBlogById(id string) (*models.Post, int, 
 		Title:     "Test Title",
 		Author:    "Test Author",
 		Content:   "Test Content",
-		TimeStamp: time.Now(),
+		TimeStamp: time.Now().Format("2006-01-02"),
 	}, 1, nil
 }
 
-func (postService *PostServiceMock) SaveBlogPosts(blogs []*models.Post) ([]*models.Post, error) {
-	return []*models.Post{}, nil
+func (postService *PostServiceMock) SaveBlogPosts(blog *models.Post) (*models.Post, error) {
+	return &models.Post{}, nil
 }
 
 func (postService *PostServiceMock) UpdateBlogPost(id string, blog *models.Post) (*models.Post, error) {

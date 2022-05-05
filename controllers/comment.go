@@ -10,6 +10,7 @@ import (
 	"github.com/jatinsaini249/ms-blog/services"
 )
 
+// ICommentController => interface
 type ICommentController interface {
 	HandleGetPostComments(gin *gin.Context)
 	HandleGetComment(gin *gin.Context)
@@ -18,16 +19,19 @@ type ICommentController interface {
 	HandleUpdateComment(gin *gin.Context)
 }
 
+// CommentController => Comment Controller
 type CommentController struct {
 	CommentService services.ICommentService
 }
 
+// NewCommentController => Function to initialize comment controller with all its dependencies
 func NewCommentController(commentService services.ICommentService) ICommentController {
 	return &CommentController{
 		CommentService: commentService,
 	}
 }
 
+// HandleGetPostComments => Method to get all comments on a particular post
 func (ctrl *CommentController) HandleGetPostComments(gin *gin.Context) {
 	postId := gin.Param("id")
 	if postId != "" {
@@ -43,6 +47,7 @@ func (ctrl *CommentController) HandleGetPostComments(gin *gin.Context) {
 	gin.JSON(http.StatusNotFound, fmt.Errorf("Incorrect resource name"))
 }
 
+// HandleGetComment => Method handler to get a particualr comment by passing comment id in request
 func (ctrl *CommentController) HandleGetComment(gin *gin.Context) {
 	commentId := gin.Param("id")
 	if commentId != "" {
@@ -56,6 +61,7 @@ func (ctrl *CommentController) HandleGetComment(gin *gin.Context) {
 	gin.JSON(http.StatusNotFound, fmt.Errorf("Incorrect resource name"))
 }
 
+// HandleSaveComment => Method handler to save new comment on a particular post by passing postId
 func (ctrl *CommentController) HandleSaveComment(gin *gin.Context) {
 	var comment *models.Comment
 
@@ -83,6 +89,7 @@ func (ctrl *CommentController) HandleSaveComment(gin *gin.Context) {
 	gin.JSON(http.StatusOK, commentList)
 }
 
+// HandleUpdateComment => Method handler to update a particular comment by passing comment id
 func (ctrl *CommentController) HandleUpdateComment(gin *gin.Context) {
 	var comment *models.Comment
 
@@ -109,6 +116,7 @@ func (ctrl *CommentController) HandleUpdateComment(gin *gin.Context) {
 	gin.JSON(http.StatusOK, res)
 }
 
+// HandleDeleteComment => Method to delete a particular comment by passing id in request
 func (ctrl *CommentController) HandleDeleteComment(gin *gin.Context) {
 	id := gin.Param("id")
 

@@ -7,6 +7,7 @@ import (
 	"github.com/jatinsaini249/ms-blog/models"
 )
 
+// ICommentService => interface
 type ICommentService interface {
 	SaveComment(comment *models.Comment, parentId string, postId string) (*models.Comment, error)
 	GetAllCommentsByPostId(id string) ([]*models.Comment, error)
@@ -16,6 +17,7 @@ type ICommentService interface {
 	DeleteCommentById(id string) (bool, error)
 }
 
+// commentList => In memory list of comments
 var commentList []*models.Comment = []*models.Comment{
 	&models.Comment{
 		Id:      "1",
@@ -25,16 +27,19 @@ var commentList []*models.Comment = []*models.Comment{
 	},
 }
 
+// CommentService  => struct
 type CommentService struct {
 	Comments []*models.Comment
 }
 
+// NewCommentService => Initializes comment service with all its dependencies
 func NewCommentService() ICommentService {
 	return &CommentService{
 		Comments: commentList,
 	}
 }
 
+// GetAllCommentsByPostId => Method to get list of comments by passing post id
 func (commentService *CommentService) GetAllCommentsByPostId(id string) ([]*models.Comment, error) {
 	commentList := make([]*models.Comment, 0)
 
@@ -47,6 +52,7 @@ func (commentService *CommentService) GetAllCommentsByPostId(id string) ([]*mode
 	return commentList, nil
 }
 
+// GetAllCommentsByParentCommentId => Method to get child comments by passing comment Id in request
 func (commentService *CommentService) GetAllCommentsByParentCommentId(id string) ([]*models.Comment, error) {
 	commentList := make([]*models.Comment, 0)
 
@@ -59,6 +65,7 @@ func (commentService *CommentService) GetAllCommentsByParentCommentId(id string)
 	return commentList, nil
 }
 
+// GetCommentById => Method to get comment by Id
 func (commentService *CommentService) GetCommentById(id string) ([]*models.Comment, error) {
 	commentList := make([]*models.Comment, 0)
 	mapList := make(map[string]*models.Comment)
@@ -95,6 +102,7 @@ func (commentService *CommentService) GetCommentById(id string) ([]*models.Comme
 	return nil, fmt.Errorf("No record found for this comment Id : %v", id)
 }
 
+// SaveComment => Method to save comment by passing postId and parent Id if it is a child comment
 func (commentService *CommentService) SaveComment(comment *models.Comment, parentId string, postId string) (*models.Comment, error) {
 	comment.ParentId = &parentId
 	comment.PostId = postId
@@ -105,9 +113,10 @@ func (commentService *CommentService) SaveComment(comment *models.Comment, paren
 
 }
 
+// UpdateCommentById => Method to update comment by comment Id
 func (commentService *CommentService) UpdateCommentById(id string, comment *models.Comment) (*models.Comment, error) {
-	for index, comment := range commentService.Comments {
-		if strings.EqualFold(comment.Id, id) {
+	for index, val := range commentService.Comments {
+		if strings.EqualFold(val.Id, id) {
 			commentService.Comments[index].Author = comment.Author
 			commentService.Comments[index].Content = comment.Content
 			return commentService.Comments[index], nil
@@ -116,6 +125,7 @@ func (commentService *CommentService) UpdateCommentById(id string, comment *mode
 	return nil, fmt.Errorf("No record found for comment Id : %v", id)
 }
 
+//DeleteCommentById => Method to delete comment by comment Id
 func (commentService *CommentService) DeleteCommentById(id string) (bool, error) {
 	for index, comment := range commentService.Comments {
 		if strings.EqualFold(comment.Id, id) {

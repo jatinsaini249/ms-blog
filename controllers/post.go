@@ -10,6 +10,7 @@ import (
 	"github.com/jatinsaini249/ms-blog/services"
 )
 
+// IPostController => Interface
 type IPostController interface {
 	HandleGetBlogPosts(gin *gin.Context)
 	HandleSaveBlogs(gin *gin.Context)
@@ -17,31 +18,35 @@ type IPostController interface {
 	HandleUpdateBlogPost(gin *gin.Context)
 }
 
+// PostController => struct
 type PostController struct {
 	BlogPostService services.IPostService
 }
 
+// NewPostController => To initialize post controller with its dependencies
 func NewPostController(postService services.IPostService) *PostController {
 	return &PostController{
 		BlogPostService: postService,
 	}
 }
 
+// HandleGetBlogPosts => Method to handle request to return all blog posts
 func (ctrl *PostController) HandleGetBlogPosts(gin *gin.Context) {
 	blogsList, err := ctrl.BlogPostService.GetAllBlogsList()
 	if err != nil {
-		gin.JSON(http.StatusBadRequest, err)
+		gin.JSON(http.StatusBadRequest, gin.Error(err))
 		return
 	}
 	gin.JSON(http.StatusOK, blogsList)
 }
 
+// HandleSaveBlogs => Method to handle POST request to insert new blog post
 func (ctrl *PostController) HandleSaveBlogs(gin *gin.Context) {
-	var blogPost []*models.Post
+	var blogPost *models.Post
 
 	err := gin.ShouldBindJSON(&blogPost)
 	if err != nil {
-		gin.JSON(http.StatusBadRequest, err.Error())
+		gin.JSON(http.StatusBadRequest, gin.Error(err))
 		return
 	}
 
@@ -53,19 +58,20 @@ func (ctrl *PostController) HandleSaveBlogs(gin *gin.Context) {
 
 	blogs, err := ctrl.BlogPostService.SaveBlogPosts(blogPost)
 	if err != nil {
-		gin.JSON(http.StatusBadRequest, err)
+		gin.JSON(http.StatusBadRequest, gin.Error(err))
 		return
 	}
 
 	gin.JSON(http.StatusOK, blogs)
 }
 
+// HandleUpdateBlogPost => Method to handle PUT request to update existing blog post
 func (ctrl *PostController) HandleUpdateBlogPost(gin *gin.Context) {
 	var blogPost *models.Post
 
 	err := gin.ShouldBind(&blogPost)
 	if err != nil {
-		gin.JSON(http.StatusBadRequest, err)
+		gin.JSON(http.StatusBadRequest, gin.Error(err))
 		return
 	}
 
@@ -79,19 +85,20 @@ func (ctrl *PostController) HandleUpdateBlogPost(gin *gin.Context) {
 
 	blog, err := ctrl.BlogPostService.UpdateBlogPost(id, blogPost)
 	if err != nil {
-		gin.JSON(http.StatusBadRequest, err.Error())
+		gin.JSON(http.StatusBadRequest, gin.Error(err))
 		return
 	}
 
 	gin.JSON(http.StatusOK, blog)
 }
 
+// HandleDeleteBlogPost => Method to handle Delete request to remove particular blog
 func (ctrl *PostController) HandleDeleteBlogPost(gin *gin.Context) {
 	id := gin.Param("id")
 
 	success, err := ctrl.BlogPostService.DeleteBlogPost(id)
 	if err != nil {
-		gin.JSON(http.StatusBadRequest, err.Error())
+		gin.JSON(http.StatusBadRequest, gin.Error(err))
 		return
 	}
 
