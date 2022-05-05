@@ -25,8 +25,8 @@ type CommentController struct {
 }
 
 // NewCommentController => Function to initialize comment controller with all its dependencies
-func NewCommentController(commentService services.ICommentService) ICommentController {
-	return &CommentController{
+func NewCommentController(commentService services.ICommentService) CommentController {
+	return CommentController{
 		CommentService: commentService,
 	}
 }
